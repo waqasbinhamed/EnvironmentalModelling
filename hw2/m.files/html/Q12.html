@@ -1,0 +1,219 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Q12</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-10-27"><meta name="DC.source" content="Q12.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput">clear <span class="string">all</span>
+close <span class="string">all</span>
+clc
+
+W = 246;    <span class="comment">% mass discharge rate into the surface water(in kg/day)</span>
+k_1 = 0.25; <span class="comment">% first order decay coefficient(in day^-1)</span>
+Q = 3.13;	<span class="comment">% river flow rate(in m^3/s)</span>
+A = 72600;	<span class="comment">% cross sectional area of river(in m^2)</span>
+D = 40*24:240:100*24; <span class="comment">% range of dispersion coefficient</span>
+C_m = [1.63 3.5 9.13 29.6 70.4 40.7 12.1 7.26 2.12];    <span class="comment">%measured concentr</span>
+<span class="comment">%-ation values</span>
+x = -320:80:320;    <span class="comment">% distances</span>
+
+v = Q/A;    <span class="comment">% flow velocity</span>
+
+<span class="keyword">for</span> j = 1:length(D) <span class="comment">% loop for the range of D values</span>
+
+    m = sqrt(1+((4*k_1*D(j))/(v^2)));
+    C_0 = W/(m*Q);	<span class="comment">% concentration at x=0(in g/L)</span>
+    r_1 = v*(1+m)./(2*D(j));
+    r_2 = v*(1-m)./(2*D(j));
+
+    <span class="keyword">for</span> i = 1:length(x)
+
+        <span class="keyword">if</span> x(i) &lt;= 0
+            C_x(j,i) = C_0*exp(r_1*x(i)); <span class="comment">%calculation of C_x if x&lt;=0</span>
+        <span class="keyword">elseif</span> x(i) &gt;= 0
+            C_x(j,i) = C_0*exp(r_2*x(i)); <span class="comment">%calculation of C_x if x&gt;0</span>
+        <span class="keyword">end</span>
+
+        C_x(j,i) = C_x(j,i)*10.^6;   <span class="comment">%convertion from g/L to micrograms/L</span>
+
+    <span class="keyword">end</span>
+
+    RMSE(j) = sqrt(mean((C_x(j,:) - C_m).^2)); <span class="comment">%RMSE calculation formula</span>
+    deltaC=max(C_m)-min(C_m); <span class="comment">%difference between max and min measured conc.</span>
+    CE=RMSE/deltaC*100;
+    SSE=sum((C_m-C_x).^2); <span class="comment">%SSE calculation</span>
+    SSyy=sum((C_m-mean(C_m)).^2); <span class="comment">%SSY calculation</span>
+    R2=1-SSE/SSyy; <span class="comment">%calculation of R^2</span>
+    disp([<span class="string">'If D= '</span> num2str(D(j)/24)])
+    disp([<span class="string">'RMSE= '</span> num2str(RMSE(j))])
+    disp([<span class="string">'CE= '</span> num2str(CE(j))])
+    fprintf(<span class="string">'\n'</span>)
+
+<span class="keyword">end</span>
+
+disp([<span class="string">'Min CE= '</span> num2str(min(CE))])
+disp([<span class="string">'Max CE= '</span> num2str(max(CE))])
+plot (x,C_m,<span class="string">'o'</span>)
+hold <span class="string">all</span>
+plot (x,C_m,<span class="string">'-or'</span>,<span class="string">'markeredgecolor'</span>,<span class="string">'red'</span>)
+plot(x,C_x(6,:),<span class="string">'-^m'</span>,<span class="string">'markeredgecolor'</span>,<span class="string">'blue'</span>)
+plot(x,C_x(1,:),<span class="string">'-xm'</span>,<span class="string">'markeredgecolor'</span>,<span class="string">'magenta'</span>)
+hold <span class="string">all</span>
+xlabel(<span class="string">'x, m'</span>);
+ylabel(<span class="string">'C, micrograms/l'</span>);
+legend(<span class="string">'C_m'</span>,<span class="string">'C Best'</span>,<span class="string">'C Worst'</span>)
+</pre><pre class="codeoutput">If D= 40
+RMSE= 13.6468
+CE= 19.8441
+
+If D= 50
+RMSE= 9.867
+CE= 14.3478
+
+If D= 60
+RMSE= 7.2149
+CE= 10.4913
+
+If D= 70
+RMSE= 5.376
+CE= 7.8174
+
+If D= 80
+RMSE= 4.2447
+CE= 6.1724
+
+If D= 90
+RMSE= 3.7858
+CE= 5.505
+
+If D= 100
+RMSE= 3.8777
+CE= 5.6386
+
+Min CE= 5.505
+Max CE= 19.8441
+</pre><img vspace="5" hspace="5" src="Q12_01.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear all
+close all
+clc
+
+W = 246;    % mass discharge rate into the surface water(in kg/day)
+k_1 = 0.25; % first order decay coefficient(in day^-1)
+Q = 3.13;	% river flow rate(in m^3/s)
+A = 72600;	% cross sectional area of river(in m^2)
+D = 40*24:240:100*24; % range of dispersion coefficient
+C_m = [1.63 3.5 9.13 29.6 70.4 40.7 12.1 7.26 2.12];    %measured concentr
+%-ation values
+x = -320:80:320;    % distances
+
+v = Q/A;    % flow velocity
+
+for j = 1:length(D) % loop for the range of D values
+    
+    m = sqrt(1+((4*k_1*D(j))/(v^2)));
+    C_0 = W/(m*Q);	% concentration at x=0(in g/L)
+    r_1 = v*(1+m)./(2*D(j));
+    r_2 = v*(1-m)./(2*D(j));
+    
+    for i = 1:length(x)
+    
+        if x(i) <= 0
+            C_x(j,i) = C_0*exp(r_1*x(i)); %calculation of C_x if x<=0
+        elseif x(i) >= 0
+            C_x(j,i) = C_0*exp(r_2*x(i)); %calculation of C_x if x>0
+        end
+
+        C_x(j,i) = C_x(j,i)*10.^6;   %convertion from g/L to micrograms/L
+    
+    end
+
+    RMSE(j) = sqrt(mean((C_x(j,:) - C_m).^2)); %RMSE calculation formula 
+    deltaC=max(C_m)-min(C_m); %difference between max and min measured conc.
+    CE=RMSE/deltaC*100;
+    SSE=sum((C_m-C_x).^2); %SSE calculation
+    SSyy=sum((C_m-mean(C_m)).^2); %SSY calculation
+    R2=1-SSE/SSyy; %calculation of R^2
+    disp(['If D= ' num2str(D(j)/24)])
+    disp(['RMSE= ' num2str(RMSE(j))])
+    disp(['CE= ' num2str(CE(j))])
+    fprintf('\n')
+
+end
+
+disp(['Min CE= ' num2str(min(CE))])
+disp(['Max CE= ' num2str(max(CE))])
+plot (x,C_m,'o')
+hold all
+plot (x,C_m,'-or','markeredgecolor','red')
+plot(x,C_x(6,:),'-^m','markeredgecolor','blue')
+plot(x,C_x(1,:),'-xm','markeredgecolor','magenta')
+hold all
+xlabel('x, m');
+ylabel('C, micrograms/l');
+legend('C_m','C Best','C Worst')
+
+##### SOURCE END #####
+--></body></html>

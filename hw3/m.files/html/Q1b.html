@@ -1,0 +1,210 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Q1b</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-11-05"><meta name="DC.source" content="Q1b.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput">clear <span class="string">all</span>
+close <span class="string">all</span>
+clc
+
+Q_w = [60 30 52.08 24]; <span class="comment">%incoming flowrates in m^3/day</span>
+Q_i = [50 35 53 20];	<span class="comment">%outgoing flowrates in m^3/day</span>
+
+syms <span class="string">Q_23</span> <span class="string">Q_34</span> <span class="string">Q_4r</span>;
+
+Q_12=Q_w(1)-Q_i(1);
+
+CEq_2=Q_23-0.4*Q_4r==Q_w(2)+Q_12-Q_i(2);    <span class="comment">%continuity eqs. for flowrates</span>
+CEq_3=-1*Q_23+Q_34==Q_w(3)-Q_i(3);
+CEq_4=-1*Q_34+Q_4r==Q_w(4)-Q_i(4);
+
+[A,B] = equationsToMatrix([CEq_2,CEq_3,CEq_4]);  <span class="comment">%calculation of pther flowrates</span>
+x = A\B;
+Q_23 = double(x(1,1));
+Q_34= double(x(2,1));
+Q_4r= double(x(3,1));
+
+C_w = [15 8 14 12]; <span class="comment">%incoming concentrations in mg/L</span>
+C_w = C_w.*(10^3);  <span class="comment">%in mg/m^3</span>
+
+V = [5.2 4.1 7.3 2.7];
+V = V.*(10^6);  <span class="comment">%lake volumes in 10^6m^3</span>
+
+k = [0.535 0.467 0.952 0.368];  <span class="comment">%decay rate in m^3y^-1kg^-1</span>
+k = k.*((10^-6)*(1/365));   <span class="comment">%in m^3d^-1mg^-1</span>
+
+syms <span class="string">C_a</span> <span class="string">C_b</span> <span class="string">C_c</span> <span class="string">C_d</span>;
+
+
+r = [k(1)*(C_a)^2 k(2)*(C_b)^2 k(3)*(C_c)^2 k(4)*(C_d)^2]; <span class="comment">%decay rates</span>
+
+<span class="comment">%steady-state mass balances for each lake</span>
+MB_a= (Q_w(1)*C_w(1))-(Q_i(1)*C_a)-(Q_12*C_a)-V(1)*r(1);
+MB_b=(Q_12*C_a)+(Q_w(2)*C_w(2))+(0.4*Q_4r*C_d)-(Q_i(2)*C_b)-(Q_23*C_b)<span class="keyword">...</span>
+    -V(2)*r(2); <span class="comment">%modified equation</span>
+MB_c=(Q_23*C_b)+(Q_w(3)*C_w(3))-(Q_i(3)*C_c)-(Q_34*C_c)-V(3)*r(3);
+MB_d=(Q_34*C_c)+(Q_w(4)*C_w(4))-(Q_i(4)*C_d)-(Q_4r*C_d)-V(4)*r(4);
+
+[solC_a,solC_b,solC_c,solC_d] = solve([MB_a == 0, MB_b == 0, MB_c == 0, MB_d == 0], [C_a, C_b,<span class="keyword">...</span>
+    C_c, C_d]);
+
+solC_a = double(solC_a);
+solC_b = double(solC_b);
+solC_c = double(solC_c);
+solC_d = double(solC_d);
+
+<span class="comment">% choosing only the positive real roots</span>
+<span class="keyword">for</span> i = 1:length(solC_a)
+    <span class="keyword">if</span>  ((solC_a(i) &gt;= 0) &amp;&amp; (real(solC_a(i)) == solC_a(i))&amp;&amp;<span class="keyword">...</span>
+            (solC_b(i) &gt;= 0) &amp;&amp; (real(solC_b(i)) == solC_b(i))&amp;&amp;<span class="keyword">...</span>
+            (solC_c(i) &gt;= 0) &amp;&amp; (real(solC_c(i)) == solC_c(i))&amp;&amp;<span class="keyword">...</span>
+            (solC_d(i) &gt;= 0) &amp;&amp; (real(solC_d(i)) == solC_d(i)))
+        C_a = solC_a(i);
+        C_b = solC_b(i);
+        C_c = solC_c(i);
+        C_d = solC_d(i);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+disp([<span class="string">'Lake A concentration (mg/m^3) = '</span> num2str(C_a)])
+disp([<span class="string">'Lake B concentration (mg/m^3) = '</span> num2str(C_b)])
+disp([<span class="string">'Lake C concentration (mg/m^3) = '</span> num2str(C_c)])
+disp([<span class="string">'Lake D concentration (mg/m^3) = '</span> num2str(C_d)])
+</pre><pre class="codeoutput">Lake A concentration (mg/m^3) = 7621.3505
+Lake B concentration (mg/m^3) = 4931.7236
+Lake C concentration (mg/m^3) = 4968.3301
+Lake D concentration (mg/m^3) = 6536.0764
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear all
+close all
+clc
+ 
+Q_w = [60 30 52.08 24]; %incoming flowrates in m^3/day
+Q_i = [50 35 53 20];	%outgoing flowrates in m^3/day
+
+syms Q_23 Q_34 Q_4r;
+
+Q_12=Q_w(1)-Q_i(1);
+
+CEq_2=Q_23-0.4*Q_4r==Q_w(2)+Q_12-Q_i(2);    %continuity eqs. for flowrates
+CEq_3=-1*Q_23+Q_34==Q_w(3)-Q_i(3);
+CEq_4=-1*Q_34+Q_4r==Q_w(4)-Q_i(4);
+
+[A,B] = equationsToMatrix([CEq_2,CEq_3,CEq_4]);  %calculation of pther flowrates
+x = A\B;
+Q_23 = double(x(1,1));
+Q_34= double(x(2,1));
+Q_4r= double(x(3,1));
+
+C_w = [15 8 14 12]; %incoming concentrations in mg/L
+C_w = C_w.*(10^3);  %in mg/m^3
+
+V = [5.2 4.1 7.3 2.7];
+V = V.*(10^6);  %lake volumes in 10^6m^3
+
+k = [0.535 0.467 0.952 0.368];  %decay rate in m^3y^-1kg^-1
+k = k.*((10^-6)*(1/365));   %in m^3d^-1mg^-1
+
+syms C_a C_b C_c C_d;
+
+
+r = [k(1)*(C_a)^2 k(2)*(C_b)^2 k(3)*(C_c)^2 k(4)*(C_d)^2]; %decay rates
+
+%steady-state mass balances for each lake 
+MB_a= (Q_w(1)*C_w(1))-(Q_i(1)*C_a)-(Q_12*C_a)-V(1)*r(1);
+MB_b=(Q_12*C_a)+(Q_w(2)*C_w(2))+(0.4*Q_4r*C_d)-(Q_i(2)*C_b)-(Q_23*C_b)...
+    -V(2)*r(2); %modified equation
+MB_c=(Q_23*C_b)+(Q_w(3)*C_w(3))-(Q_i(3)*C_c)-(Q_34*C_c)-V(3)*r(3);
+MB_d=(Q_34*C_c)+(Q_w(4)*C_w(4))-(Q_i(4)*C_d)-(Q_4r*C_d)-V(4)*r(4);
+
+[solC_a,solC_b,solC_c,solC_d] = solve([MB_a == 0, MB_b == 0, MB_c == 0, MB_d == 0], [C_a, C_b,...
+    C_c, C_d]);
+
+solC_a = double(solC_a);
+solC_b = double(solC_b);
+solC_c = double(solC_c);
+solC_d = double(solC_d);
+
+% choosing only the positive real roots
+for i = 1:length(solC_a)
+    if  ((solC_a(i) >= 0) && (real(solC_a(i)) == solC_a(i))&&...
+            (solC_b(i) >= 0) && (real(solC_b(i)) == solC_b(i))&&...
+            (solC_c(i) >= 0) && (real(solC_c(i)) == solC_c(i))&&...
+            (solC_d(i) >= 0) && (real(solC_d(i)) == solC_d(i)))
+        C_a = solC_a(i);
+        C_b = solC_b(i);
+        C_c = solC_c(i);
+        C_d = solC_d(i);
+    end
+end
+
+disp(['Lake A concentration (mg/m^3) = ' num2str(C_a)])
+disp(['Lake B concentration (mg/m^3) = ' num2str(C_b)])
+disp(['Lake C concentration (mg/m^3) = ' num2str(C_c)])
+disp(['Lake D concentration (mg/m^3) = ' num2str(C_d)])
+##### SOURCE END #####
+--></body></html>
